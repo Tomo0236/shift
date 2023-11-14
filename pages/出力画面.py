@@ -11,12 +11,10 @@ st.session_state.book = load_workbook('卒業研究_シフトデータ_1.xlsx')
 sh1 = st.session_state.book['入力データ']
 sh2 = st.session_state.book['シフト表']
 
-uploaded_file = st.file_uploader("CSVファイルをアップロードしてください", accept_multiple_files=True)
-#if uploaded_file is not None:
-    #data = pd.read_csv(uploaded_file)
-    #st.dataframe(data)
+uploaded_files = st.file_uploader("CSVファイルをアップロードしてください", accept_multiple_files=True)
 for uploaded_file in uploaded_files:
-    st.dataframe(uploaded_file.name)
+    data = pd.read_csv(uploaded_file)
+    st.dataframe(data)
 
 
 
