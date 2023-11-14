@@ -11,6 +11,15 @@ st.session_state.book = load_workbook('卒業研究_シフトデータ_1.xlsx')
 sh1 = st.session_state.book['入力データ']
 sh2 = st.session_state.book['シフト表']
 
+uploaded_file = st.file_uploader("CSVファイルをアップロードしてください", accept_multiple_files=True)
+#if uploaded_file is not None:
+    #data = pd.read_csv(uploaded_file)
+    #st.dataframe(data)
+for uploaded_file in uploaded_files:
+    st.dataframe(uploaded_file.name)
+
+
+
 #定数用のデータの作成
 a = {}    
 for i in st.session_state.I:
@@ -101,5 +110,7 @@ if st.button('シフト作成'):
         st.session_state.book.save('卒業研究_シフトデータ_2.xlsx')
         df = pd.read_excel('卒業研究_シフトデータ_2.xlsx', sheet_name='シフト表', index_col=0)
         st.dataframe(df)
+        df_shift=pd.DataFrame(data=df)
+        st.download_button(label='シフトをダウンロード', data=df_shift.to_csv().encode('utf-8-sig'), file_name='シフト表.csv')
     else:
         st.write('シフトが作成できませんでした')
