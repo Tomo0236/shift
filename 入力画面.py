@@ -3,6 +3,7 @@ from pulp import *
 from openpyxl import *
 import pandas as pd
 import time
+from io import BytesIO
 
 
 #Excelシートの読み込み
@@ -110,3 +111,6 @@ if int(member) > 0:
             st.session_state.book.save('卒業研究_シフトデータ_1.xlsx')
             df = pd.read_excel('卒業研究_シフトデータ_1.xlsx', sheet_name='入力データ', index_col=0)
             st.dataframe(df)
+            
+            df_nyuuryoku=pd.DataFrame(data=df)
+            st.download_button(label='入力データをダウンロード', data=df_nyuuryoku.to_csv().encode('utf-8-sig'), file_name='入力データ.csv')
