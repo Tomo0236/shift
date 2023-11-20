@@ -3,6 +3,7 @@ from pulp import *
 from openpyxl import *
 import pandas as pd
 import time
+from io import BytesIO
 
 st.title('ライブ裏方シフトのシフト表')
 
@@ -10,13 +11,6 @@ st.title('ライブ裏方シフトのシフト表')
 st.session_state.book = load_workbook('卒業研究_シフトデータ_1.xlsx')
 sh1 = st.session_state.book['入力データ']
 sh2 = st.session_state.book['シフト表']
-
-uploaded_files = st.file_uploader("CSVファイルをアップロードしてください", accept_multiple_files=True)
-for uploaded_file in uploaded_files:
-    data = pd.read_csv(uploaded_file)
-    st.dataframe(data)
-
-
 
 #定数用のデータの作成
 a = {}    
@@ -46,7 +40,6 @@ for i in st.session_state.I:
         z[i, t] = LpVariable(f'z{i}, {t}', cat=LpBinary)
 
 #制約条件の追加
-
 #条件①
 for j in st.session_state.J:
     for t in st.session_state.T:
@@ -108,7 +101,7 @@ if st.button('シフト作成'):
         st.session_state.book.save('卒業研究_シフトデータ_2.xlsx')
         df = pd.read_excel('卒業研究_シフトデータ_2.xlsx', sheet_name='シフト表', index_col=0)
         st.dataframe(df)
-        df_shift=pd.DataFrame(data=df)
-        st.download_button(label='シフトをダウンロード', data=df_shift.to_csv().encode('utf-8-sig'), file_name='シフト表.csv')
+        df.to_excel(buf := BytesIO(), index=True)
+        st.download_button("シフト表をダウンロード",buf.getvalue(),"シフト表.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     else:
         st.write('シフトが作成できませんでした')
