@@ -112,5 +112,5 @@ if int(member) > 0:
             df = pd.read_excel('卒業研究_シフトデータ_1.xlsx', sheet_name='入力データ', index_col=0)
             st.dataframe(df)
             
-            df_nyuuryoku=pd.DataFrame(data=df)
-            st.download_button(label='入力データをダウンロード', data=df_nyuuryoku.to_csv().encode('utf-8-sig'), file_name='入力データ.csv')
+            df.to_excel(buf := BytesIO(), index=True)
+            st.download_button("入力データをダウンロード",buf.getvalue(),"入力データ.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
