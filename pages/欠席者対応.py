@@ -4,6 +4,11 @@ from openpyxl import *
 import pandas as pd
 import time
 
+m_wb = open('入力データ.xlsx')
+wb = open('シフト表.xlsx')
+m_wb._sheets.append(wb._sheets[0])
+m_wb.save('集結.xlsx')
+
 st.title('ライブ裏方シフトのシフト表')
 st.header('▼ 欠席者の入力')
 
@@ -61,7 +66,7 @@ if uploaded_file is not None:
         delete_member_list.clear()
         data_nyuuryoku_cache.clear()
     
-    btn = st.button('clear turn', on_click=all_clear)
+    btn = st.button('clear', on_click=all_clear)
 
 #定数用のデータの作成(欠席者対応版)
     I = [i+1 for i in range(re_member)]
