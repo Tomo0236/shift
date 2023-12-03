@@ -4,10 +4,10 @@ from openpyxl import *
 import pandas as pd
 import time
 
-m_wb = open('入力データ.xlsx')
-wb = open('シフト表.xlsx')
-m_wb._sheets.append(wb._sheets[0])
-m_wb.save('集結.xlsx')
+#m_wb = open('入力データ.xlsx')
+#wb = open('シフト表.xlsx')
+#m_wb._sheets.append(wb._sheets[0])
+#m_wb.save('シフトデータ.xlsx')
 
 st.title('ライブ裏方シフトのシフト表')
 st.header('▼ 欠席者の入力')
@@ -152,8 +152,6 @@ if uploaded_file is not None:
 
 #最適化の実行
     model.solve()
-#    new_data_shift = pd.DataFrame(index=range(4), columns=range(len(T)))
- #   new_data_shift.fillna(0, inplace=True)
     
     if st.button('欠席者対応シフト作成'): 
         status = st.empty()
@@ -168,9 +166,6 @@ if uploaded_file is not None:
                 for j in range(len(J)):
                     for t in range(len(T)):
                         if value(x[i, j, t]) > 0.01:
-                           # if old_x[j, t] in member_list:
-                            #    new_data_shift.iloc[j, t] = old_x[j, t]
-                            #else:
                             data_shift.iloc[j, t] = member_list[i]
             st.dataframe(data_shift)
         else:
