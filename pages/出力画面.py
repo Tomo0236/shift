@@ -4,6 +4,7 @@ from openpyxl import *
 import pandas as pd
 import time
 from io import BytesIO
+import tempfile
 
 st.title('ライブ裏方シフトのシフト表')
 
@@ -101,7 +102,11 @@ if st.button('シフト作成'):
         st.session_state.book.save('卒業研究_シフトデータ_2.xlsx')
         df = pd.read_excel('卒業研究_シフトデータ_2.xlsx', sheet_name='シフト表', index_col=0)
         st.dataframe(df)
-        df.to_excel(buf := BytesIO(), index=True)
-        st.download_button("シフト表をダウンロード",buf.getvalue(),"シフト表.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        
+        workbook = load_workbook('卒業研究_シフトデータ_2.xlsx')
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            workbook.save(tmp.name)
+            data = BytesIO(tmp.read())
+        st.download_button("データをダウンロード",data=data,mime='xlsx',file_name="シフトデータ.xlsx")
     else:
         st.write('シフトが作成できませんでした')
