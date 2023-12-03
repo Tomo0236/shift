@@ -103,7 +103,7 @@ if int(member) > 0:
             for i in range(0, len(lst_turn)):
                 sh1.cell(row=2+i, column=1+lst_turn[i]).value = 0
             for i in range(0, len(lst_turn)):
-                if lst_turn[i] < 8:
+                if lst_turn[i] < int(slot):
                     sh1.cell(row=2+i, column=2+lst_turn[i]).value = 2
             for i in range(0, len(lst_turn)):
                 if lst_turn[i] > 1:
