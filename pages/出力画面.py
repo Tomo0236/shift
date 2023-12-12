@@ -60,19 +60,19 @@ for i in st.session_state.I:
         if a[i, t] == 3:
             model += lpSum(x[i, j, t] for j in st.session_state.J) == 0
 #条件⑤
-s = (len(st.session_state.J) * len(st.session_state.T)) / len(st.session_state.I)
-for i in st.session_state.I:
-    model += lpSum(x[i, j, t] for j in st.session_state.J for t in st.session_state.T) >= s - v[i]
-    model += lpSum(x[i, j, t] for j in st.session_state.J for t in st.session_state.T) <= s + v[i]
-#条件⑥
-for i in st.session_state.I:
-    for t in range(len(st.session_state.T)-1):
-        model += lpSum(x[i, j, t+1] for j in st.session_state.J) + lpSum(x[i, j, t+2] for j in st.session_state.J) <= 1 + z[i, t+1]
-#条件⑦
 for i in st.session_state.I:
     for t in st.session_state.T:
         if a[i, t] == 2:
             model += lpSum(x[i, j, t] for j in st.session_state.J) == 0 + w[i, t]
+#条件⑥
+s = (len(st.session_state.J) * len(st.session_state.T)) / len(st.session_state.I)
+for i in st.session_state.I:
+    model += lpSum(x[i, j, t] for j in st.session_state.J for t in st.session_state.T) >= s - v[i]
+    model += lpSum(x[i, j, t] for j in st.session_state.J for t in st.session_state.T) <= s + v[i]
+#条件⑦
+for i in st.session_state.I:
+    for t in range(len(st.session_state.T)-1):
+        model += lpSum(x[i, j, t+1] for j in st.session_state.J) + lpSum(x[i, j, t+2] for j in st.session_state.J) <= 1 + z[i, t+1]
         
 #目的関数の設定
 model += lpSum(v[i] for i in st.session_state.I) + lpSum(z[i, t] for i in st.session_state.I for t in st.session_state.T) + lpSum(w[i, t] for i in st.session_state.I for t in st.session_state.T)

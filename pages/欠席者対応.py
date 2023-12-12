@@ -4,11 +4,6 @@ from openpyxl import *
 import pandas as pd
 import time
 
-#m_wb = open('入力データ.xlsx')
-#wb = open('シフト表.xlsx')
-#m_wb._sheets.append(wb._sheets[0])
-#m_wb.save('シフトデータ.xlsx')
-
 st.title('ライブ裏方シフトのシフト表')
 st.header('▼ 欠席者の入力')
 
@@ -56,8 +51,8 @@ if uploaded_file is not None:
         data_nyuuryoku = data_nyuuryoku_cache()
         if submitted:
             member_list.remove(member_name)
-        st.table(member_list)
-        st.table(data_nyuuryoku)
+       # st.table(member_list)
+        #st.table(data_nyuuryoku)
         
     re_member = len(member_list)
     re_slot = len(data_shift.columns)
@@ -128,19 +123,19 @@ if uploaded_file is not None:
             if a[i, t] == 3:
                 model += lpSum(x[i, j, t] for j in range(len(J))) == 0
 #条件⑤
-    s = (len(J) * len(T)) / len(I)
-    for i in range(len(I)):
-        model += lpSum(x[i, j, t] for j in range(len(J)) for t in range(len(T))) >= s - v[i]
-        model += lpSum(x[i, j, t] for j in range(len(J)) for t in range(len(T))) <= s + v[i]
-#条件⑥
-    for i in range(len(I)):
-        for t in range(len(T)-2):
-            model += lpSum(x[i, j, t+1] for j in range(len(J))) + lpSum(x[i, j, t+2] for j in range(len(J))) <= 1 + z[i, t+1]
-#条件⑦
     for i in range(len(I)):
         for t in range(len(T)):
             if a[i, t] == 2:
                 model += lpSum(x[i, j, t] for j in range(len(J))) == 0 + w[i, t]
+#条件⑥
+    s = (len(J) * len(T)) / len(I)
+    for i in range(len(I)):
+        model += lpSum(x[i, j, t] for j in range(len(J)) for t in range(len(T))) >= s - v[i]
+        model += lpSum(x[i, j, t] for j in range(len(J)) for t in range(len(T))) <= s + v[i]
+#条件⑦
+    for i in range(len(I)):
+        for t in range(len(T)-2):
+            model += lpSum(x[i, j, t+1] for j in range(len(J))) + lpSum(x[i, j, t+2] for j in range(len(J))) <= 1 + z[i, t+1]
 #条件⑧
     for j in range(len(J)):
         for t in range(len(T)):
