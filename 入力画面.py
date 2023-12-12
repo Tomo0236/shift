@@ -3,7 +3,6 @@ from pulp import *
 from openpyxl import *
 import pandas as pd
 import time
-from io import BytesIO
 
 
 #Excelシートの読み込み
@@ -71,10 +70,11 @@ if int(member) > 0:
                 st.session_state['num'] = 0
             if st.session_state['num'] < int(member):
                 st.write(st.session_state.lst_member[st.session_state['num']], 'が何バンド目に出演するか入力してください')
+                st.write('出演しない人は0を入力してください')
             if st.session_state['num'] == int(member):
                 st.write('入力完了')
                 lst_turn = list(dict_turn_member.values())
-            member_turn = st.number_input('↓↓↓', min_value=1, max_value=slot)
+            member_turn = st.number_input('↓↓↓', min_value=0, max_value=slot)
             submitted = st.form_submit_button('出演情報追加', on_click=update_index)
             if submitted:
                 dict_turn_member[st.session_state.lst_member[st.session_state['num']-1]] = member_turn
@@ -101,9 +101,10 @@ if int(member) > 0:
                 for t in range(0, int(slot)):
                     sh1.cell(row=2+i, column=2+t).value = 1
             for i in range(0, len(lst_turn)):
-                sh1.cell(row=2+i, column=1+lst_turn[i]).value = 0
+                if lst_turn[i] > 0:
+                    sh1.cell(row=2+i, column=1+lst_turn[i]).value = 0
             for i in range(0, len(lst_turn)):
-                if lst_turn[i] < int(slot):
+                if lst_turn[i] < int(slot) and lst_turn[i] > 0:
                     sh1.cell(row=2+i, column=2+lst_turn[i]).value = 2
             for i in range(0, len(lst_turn)):
                 if lst_turn[i] > 1:
@@ -111,6 +112,3 @@ if int(member) > 0:
             st.session_state.book.save('卒業研究_シフトデータ_1.xlsx')
             df = pd.read_excel('卒業研究_シフトデータ_1.xlsx', sheet_name='入力データ', index_col=0)
             st.dataframe(df)
-            
-            df.to_excel(buf := BytesIO(), index=True)
-            st.download_button("入力データをダウンロード",buf.getvalue(),"入力データ.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
