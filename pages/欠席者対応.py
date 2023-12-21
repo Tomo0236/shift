@@ -4,11 +4,11 @@ from openpyxl import *
 import pandas as pd
 import time
 
-st.title('ライブ裏方シフトのシフト表')
+st.title('ライブ裏方仕事の割り当て')
 st.header('▼ 欠席者の入力')
 
 #ダウンロードしたファイルの読み込み
-uploaded_file = st.file_uploader("シフト表、入力データをアップロード", type='xlsx')
+uploaded_file = st.file_uploader("ダウンロードした割り当て、入力データをアップロード", type='xlsx')
 if uploaded_file is not None:
     data_nyuuryoku = pd.read_excel(uploaded_file, sheet_name=0)
     data_shift = pd.read_excel(uploaded_file, sheet_name=1, index_col=0)
@@ -30,7 +30,7 @@ if uploaded_file is not None:
     st.table(data_nyuuryoku)
     data_nyuuryoku = data_nyuuryoku.drop(columns = '名前')
     #st.table(data_nyuuryoku)
-    st.write('前回作成したシフト表')
+    st.write('前回決定した割り当て')
     st.table(data_shift)
     
     @st.cache_resource
@@ -51,8 +51,8 @@ if uploaded_file is not None:
         data_nyuuryoku = data_nyuuryoku_cache()
         if submitted:
             member_list.remove(member_name)
-       # st.table(member_list)
-        #st.table(data_nyuuryoku)
+        st.table(member_list)
+        st.table(data_nyuuryoku)
         
     re_member = len(member_list)
     re_slot = len(data_shift.columns)
@@ -140,7 +140,7 @@ if uploaded_file is not None:
     for j in range(len(J)):
         for t in range(len(T)):
             if old_x[j, t] in member_list:
-                model += lpSum(x[member_list.index(old_x[j, t]), j, t]) == 1
+                model += x[member_list.index(old_x[j, t]), j, t] == 1
 
 #目的関数の設定
     model += lpSum(v[i] for i in range(len(I))) + lpSum(z[i, t] for i in range(len(I)) for t in range(len(T))) + lpSum(w[i, t] for i in range(len(I)) for t in range(len(T)))
@@ -148,7 +148,7 @@ if uploaded_file is not None:
 #最適化の実行
     model.solve()
     
-    if st.button('欠席者対応シフト作成'): 
+    if st.button('欠席者対応割り当て'): 
         status = st.empty()
         bar = st.progress(0)
         for i in range(100):
@@ -164,4 +164,4 @@ if uploaded_file is not None:
                             data_shift.iloc[j, t] = member_list[i]
             st.dataframe(data_shift)
         else:
-            st.write('シフトが作成できませんでした')
+            st.write('裏方仕事の割り当てを表示できませんでした')
