@@ -51,8 +51,8 @@ if uploaded_file is not None:
         data_nyuuryoku = data_nyuuryoku_cache()
         if submitted:
             member_list.remove(member_name)
-        st.table(member_list)
-        st.table(data_nyuuryoku)
+        #st.table(member_list)
+        #st.table(data_nyuuryoku)
         
     re_member = len(member_list)
     re_slot = len(data_shift.columns)
